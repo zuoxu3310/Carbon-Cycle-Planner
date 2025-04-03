@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>膳食规划</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #1d1d1f;
+            padding: 0;
+            margin: 0;
+        }
+        .header {
+            padding: 12px 0;
+            background-color: #fff;
+            border-bottom: 1px solid #e5e5ea;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        }
+        .back-button {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        .page-title {
+            font-size: 17px;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+        }
+        .day-selector {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 12px 16px;
+            margin-bottom: 1px;
+            position: sticky;
+            top: 61px;
+            z-index: 9;
+        }
+        .day-title {
+            font-size: 17px;
+            font-weight: 500;
+            flex: 1;
+        }
+        .day-dropdown {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            color: #007aff;
+        }
+        .meal-header {
+            padding: 16px;
+            font-size: 22px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .summary-pill {
+            background: #f2f2f7;
+            border-radius: 16px;
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6e6e73;
+        }
+        .add-food {
+            background: white;
+            border-radius: 10px;
+            margin: 0 16px 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .food-selector {
+            flex: 1;
+            margin-right: 12px;
+        }
+        .food-dropdown {
+            background: #f2f2f7;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 16px;
+            width: 100%;
+            border: none;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+        .quantity-input {
+            display: flex;
+            align-items: center;
+            background: #f2f2f7;
+            border-radius: 8px;
+            padding: 0 12px;
+            margin-right: 12px;
+        }
+        .quantity-field {
+            width: 40px;
+            background: transparent;
+            border: none;
+            padding: 12px 6px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .quantity-unit {
+            color: #8e8e93;
+            font-size: 16px;
+        }
+        .add-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            background: #007aff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        .food-items {
+            margin: 0 16px 24px;
+        }
+        .food-item {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .food-info {
+            flex: 1;
+        }
+        .food-name {
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .food-quantity {
+            font-size: 14px;
+            color: #8e8e93;
+        }
+        .food-macros {
+            display: flex;
+            margin-top: 6px;
+        }
+        .macro-pill {
+            background: #f2f2f7;
+            border-radius: 12px;
+            padding: 3px 8px;
+            margin-right: 6px;
+            font-size: 12px;
+            color: #6e6e73;
+        }
+        .delete-button {
+            width: 34px;
+            height: 34px;
+            border-radius: 17px;
+            background: #f2f2f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff3b30;
+            font-size: 16px;
+        }
+        .meal-divider {
+            height: 10px;
+            background: #f2f2f7;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="nav-container">
+            <div class="back-button">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="page-title">膳食规划</div>
+            <div class="back-button" style="visibility: hidden;">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="day-selector">
+        <div class="day-title">周三</div>
+        <div class="day-dropdown">
+            高碳日 <i class="fas fa-chevron-down ml-1" style="font-size: 12px;"></i>
+        </div>
+    </div>
+
+    <div class="meal-header">
+        <div>早餐</div>
+        <div class="summary-pill">蛋白质 42g · 碳水 65g · 脂肪 15g</div>
+    </div>
+
+    <div class="add-food">
+        <div class="food-selector">
+            <select class="food-dropdown">
+                <option>鸡蛋</option>
+                <option>全麦吐司</option>
+                <option>香蕉</option>
+                <option>蛋白粉</option>
+                <option>牛奶</option>
+            </select>
+        </div>
+        <div class="quantity-input">
+            <input type="number" class="quantity-field" value="100">
+            <span class="quantity-unit">g</span>
+        </div>
+        <div class="add-button">
+            <i class="fas fa-plus" style="font-size: 14px;"></i>
+        </div>
+    </div>
+
+    <div class="food-items">
+        <div class="food-item">
+            <div class="food-info">
+                <div class="food-name">鸡蛋</div>
+                <div class="food-quantity">3个 (150g)</div>
+                <div class="food-macros">
+                    <div class="macro-pill">蛋白质 19.4g</div>
+                    <div class="macro-pill">脂肪 14.3g</div>
+                    <div class="macro-pill">碳水 1.1g</div>
+                </div>
+            </div>
+            <div class="delete-button">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="food-item">
+            <div class="food-info">
+                <div class="food-name">全麦吐司</div>
+                <div class="food-quantity">2片 (80g)</div>
+                <div class="food-macros">
+                    <div class="macro-pill">蛋白质 6.0g</div>
+                    <div class="macro-pill">脂肪 5.6g</div>
+                    <div class="macro-pill">碳水 46.4g</div>
+                </div>
+            </div>
+            <div class="delete-button">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="food-item">
+            <div class="food-info">
+                <div class="food-name">香蕉</div>
+                <div class="food-quantity">1个 (120g)</div>
+                <div class="food-macros">
+                    <div class="macro-pill">蛋白质 0.0g</div>
+                    <div class="macro-pill">脂肪 0.0g</div>
+                    <div class="macro-pill">碳水 27.4g</div>
+                </div>
+            </div>
+            <div class="delete-button">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="meal-divider"></div>
+
+    <div class="meal-header">
+        <div>午餐</div>
+        <div class="summary-pill">蛋白质 38g · 碳水 42g · 脂肪 18g</div>
+    </div>
+
+    <div class="add-food">
+        <div class="food-selector">
+            <select class="food-dropdown">
+                <option>鸡胸肉</option>
+                <option>牛肉</option>
+                <option>大米</option>
+                <option>西兰花</option>
+                <option>土豆</option>
+            </select>
+        </div>
+        <div class="quantity-input">
+            <input type="number" class="quantity-field" value="100">
+            <span class="quantity-unit">g</span>
+        </div>
+        <div class="add-button">
+            <i class="fas fa-plus" style="font-size: 14px;"></i>
+        </div>
+    </div>
+
+    <div class="food-items">
+        <div class="food-item">
+            <div class="food-info">
+                <div class="food-name">鸡胸肉</div>
+                <div class="food-quantity">150g</div>
+                <div class="food-macros">
+                    <div class="macro-pill">蛋白质 37.4g</div>
+                    <div class="macro-pill">脂肪 2.9g</div>
+                    <div class="macro-pill">碳水 0.0g</div>
+                </div>
+            </div>
+            <div class="delete-button">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="food-item">
+            <div class="food-info">
+                <div class="food-name">大米</div>
+                <div class="food-quantity">80g</div>
+                <div class="food-macros">
+                    <div class="macro-pill">蛋白质 0.0g</div>
+                    <div class="macro-pill">脂肪 0.0g</div>
+                    <div class="macro-pill">碳水 60.3g</div>
+                </div>
+            </div>
+            <div class="delete-button">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="food-item">
+            <div class="food-info">
+                <div class="food-name">西兰花</div>
+                <div class="food-quantity">200g</div>
+                <div class="food-macros">
+                    <div class="macro-pill">蛋白质 0.0g</div>
+                    <div class="macro-pill">脂肪 0.0g</div>
+                    <div class="macro-pill">碳水 13.2g</div>
+                </div>
+            </div>
+            <div class="delete-button">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="meal-divider"></div>
+
+    <div class="meal-header">
+        <div>晚餐</div>
+        <div class="summary-pill">蛋白质 28g · 碳水 19g · 脂肪 9g</div>
+    </div>
+
+    <div class="add-food">
+        <div class="food-selector">
+            <select class="food-dropdown">
+                <option>牛肉</option>
+                <option>鸡胸肉</option>
+                <option>土豆</option>
+                <option>西兰花</option>
+                <option>胡萝卜</option>
+            </select>
+        </div>
+        <div class="quantity-input">
+            <input type="number" class="quantity-field" value="100">
+            <span class="quantity-unit">g</span>
+        </div>
+        <div class="add-button">
+            <i class="fas fa-plus" style="font-size: 14px;"></i>
+        </div>
+    </div>
+
+    <div class="food-items">
+        <div class="food-item">
+            <div class="food-info">
+                <div class="food-name">牛肉</div>
+                <div class="food-quantity">100g</div>
+                <div class="food-macros">
+                    <div class="macro-pill">蛋白质 26.1g</div>
+                    <div class="macro-pill">脂肪 11.5g</div>
+                    <div class="macro-pill">碳水 0.0g</div>
+                </div>
+            </div>
+            <div class="delete-button">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="food-item">
+            <div class="food-info">
+                <div class="food-name">土豆</div>
+                <div class="food-quantity">120g</div>
+                <div class="food-macros">
+                    <div class="macro-pill">蛋白质 0.0g</div>
+                    <div class="macro-pill">脂肪 0.0g</div>
+                    <div class="macro-pill">碳水 20.6g</div>
+                </div>
+            </div>
+            <div class="delete-button">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

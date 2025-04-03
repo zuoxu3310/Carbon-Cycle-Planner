@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>营养摘要</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #1d1d1f;
+            padding: 0;
+            margin: 0;
+        }
+        .header {
+            padding: 12px 0;
+            background-color: #fff;
+            border-bottom: 1px solid #e5e5ea;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        }
+        .back-button {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        .page-title {
+            font-size: 17px;
+            font-weight: 600;
+            flex: 1;
+            text-align: center;
+        }
+        .share-button {
+            color: #007aff;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .day-selector {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 12px 16px;
+            margin-bottom: 1px;
+            position: sticky;
+            top: 61px;
+            z-index: 9;
+        }
+        .day-title {
+            font-size: 17px;
+            font-weight: 500;
+            flex: 1;
+        }
+        .day-dropdown {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            color: #007aff;
+        }
+        .summary-card {
+            margin: 16px;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .macro-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .macro-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 14px;
+        }
+        .protein-icon {
+            background: #f0f8ff;
+            color: #007aff;
+        }
+        .carb-icon {
+            background: #fff5f5;
+            color: #f56565;
+        }
+        .fat-icon {
+            background: #fffbeb;
+            color: #ed8936;
+        }
+        .macro-details {
+            flex: 1;
+        }
+        .macro-name {
+            font-size: 16px;
+            color: #6e6e73;
+            margin-bottom: 4px;
+        }
+        .macro-values {
+            display: flex;
+            align-items: baseline;
+        }
+        .macro-actual {
+            font-size: 22px;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        .macro-target {
+            font-size: 16px;
+            color: #8e8e93;
+        }
+        .progress-bar {
+            height: 6px;
+            background: #e9e9eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+        .meal-summary {
+            margin: 16px;
+        }
+        .meal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+        .meal-card {
+            background: white;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .meal-info {
+            flex: 1;
+        }
+        .meal-name {
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .meal-macros {
+            font-size: 13px;
+            color: rgba(0, 0, 0, 0.65);
+        }
+        .edit-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            background: #f2f2f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #007aff;
+            font-size: 20px;
+        }
+        .export-button {
+            background: #007aff;
+            color: white;
+            border-radius: 14px;
+            padding: 16px;
+            margin: 20px 16px;
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .export-icon {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="nav-container">
+            <div class="back-button">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="page-title">营养摘要</div>
+            <div class="share-button">
+                分享
+            </div>
+        </div>
+    </div>
+
+    <div class="day-selector">
+        <div class="day-title">周三</div>
+        <div class="day-dropdown">
+            高碳日 <i class="fas fa-chevron-down ml-1" style="font-size: 12px;"></i>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="card-title">宏量营养素摘要</div>
+        
+        <div class="macro-row">
+            <div class="macro-icon protein-icon">
+                <i class="fas fa-drumstick-bite"></i>
+            </div>
+            <div class="macro-details">
+                <div class="macro-name">蛋白质</div>
+                <div class="macro-values">
+                    <div class="macro-actual">108g</div>
+                    <div class="macro-target">/ 154g</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 70%; background: #007aff;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="macro-row">
+            <div class="macro-icon carb-icon">
+                <i class="fas fa-bread-slice"></i>
+            </div>
+            <div class="macro-details">
+                <div class="macro-name">碳水化合物</div>
+                <div class="macro-values">
+                    <div class="macro-actual">126g</div>
+                    <div class="macro-target">/ 280g</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 45%; background: #f56565;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="macro-row">
+            <div class="macro-icon fat-icon">
+                <i class="fas fa-oil-can"></i>
+            </div>
+            <div class="macro-details">
+                <div class="macro-name">脂肪</div>
+                <div class="macro-values">
+                    <div class="macro-actual">42g</div>
+                    <div class="macro-target">/ 70g</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%; background: #ed8936;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 12px; text-align: center; color: #6e6e73; font-size: 14px;">
+            总热量: 1,314 / 2,366 千卡
+        </div>
+    </div>
+
+    <div class="meal-summary">
+        <div class="meal-title">膳食详情</div>
+        
+        <div class="meal-card">
+            <div class="meal-info">
+                <div class="meal-name">早餐</div>
+                <div class="meal-macros">蛋白质 42g · 碳水 65g · 脂肪 15g</div>
+            </div>
+            <div class="edit-button">
+                <i class="fas fa-chevron-right" style="font-size: 14px;"></i>
+            </div>
+        </div>
+        
+        <div class="meal-card">
+            <div class="meal-info">
+                <div class="meal-name">午餐</div>
+                <div class="meal-macros">蛋白质 38g · 碳水 42g · 脂肪 18g</div>
+            </div>
+            <div class="edit-button">
+                <i class="fas fa-chevron-right" style="font-size: 14px;"></i>
+            </div>
+        </div>
+        
+        <div class="meal-card">
+            <div class="meal-info">
+                <div class="meal-name">晚餐</div>
+                <div class="meal-macros">蛋白质 28g · 碳水 19g · 脂肪 9g</div>
+            </div>
+            <div class="edit-button">
+                <i class="fas fa-chevron-right" style="font-size: 14px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="export-button">
+        <i class="fas fa-file-export export-icon"></i>
+        导出记录
+    </div>
+</body>
+</html>
